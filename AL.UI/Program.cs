@@ -21,6 +21,8 @@ builder.Services.AddTransient<FiltrarAlojamientoCasoDeUso>();
 builder.Services.AddTransient<AlojamientoEdicion>();
 builder.Services.AddTransient<CancelarReservaCasoDeUso>();
 builder.Services.AddTransient<ReservaAlta>();
+builder.Services.AddTransient<HabilitarFechasCasoDeUso>();
+builder.Services.AddTransient<DeshabilitarFechasCasoDeUso>();
 
 builder.Services.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddSingleton<ITarjetaRepositorio, TarjetaRepositorio>();

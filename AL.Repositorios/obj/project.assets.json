@@ -1284,11 +1284,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Repositorios\\AL.Repositorios.csproj",
+      "projectUniqueName": "C:\\Users\\maria\\AlquilandoWeb\\AL.Repositorios\\AL.Repositorios.csproj",
       "projectName": "AL.Repositorios",
-      "projectPath": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Repositorios\\AL.Repositorios.csproj",
+      "projectPath": "C:\\Users\\maria\\AlquilandoWeb\\AL.Repositorios\\AL.Repositorios.csproj",
       "packagesPath": "C:\\Users\\maria\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Repositorios\\obj\\",
+      "outputPath": "C:\\Users\\maria\\AlquilandoWeb\\AL.Repositorios\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\maria\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -1303,8 +1303,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Aplicacion\\AL.Aplicacion.csproj": {
-              "projectPath": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Aplicacion\\AL.Aplicacion.csproj"
+            "C:\\Users\\maria\\AlquilandoWeb\\AL.Aplicacion\\AL.Aplicacion.csproj": {
+              "projectPath": "C:\\Users\\maria\\AlquilandoWeb\\AL.Aplicacion\\AL.Aplicacion.csproj"
             }
           }
         }

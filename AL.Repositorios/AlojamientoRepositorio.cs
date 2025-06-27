@@ -4,25 +4,30 @@ using AL.Aplicacion.Entidades;
 using AL.Aplicacion.Interfaces;
 namespace AL.Repositorios;
 
-public class AlojamientoRepositorio:IAlojamientoRepositorio
+public class AlojamientoRepositorio : IAlojamientoRepositorio
 {
     //Caso de uso alojamiento ALTA
-    public void Agregar(Alojamiento e){
-        
-        using(var db=new EntidadesContext()){  
+    public void Agregar(Alojamiento e)
+    {
+
+        using (var db = new EntidadesContext())
+        {
             db.Add(e);
             db.SaveChanges();
         }
     }
 
     //Caso de uso alojamiento BAJA
-    public void Eliminar(Alojamiento e){
-        using(var db=new EntidadesContext()){  
+    public void Eliminar(Alojamiento e)
+    {
+        using (var db = new EntidadesContext())
+        {
             var expediente = db.Alojamientos.Where(t => t.Id == e.Id).SingleOrDefault();
-            if(expediente != null){
-                 db.Remove(expediente);
-                 db.SaveChanges();
-        }
+            if (expediente != null)
+            {
+                db.Remove(expediente);
+                db.SaveChanges();
+            }
         }
     }
     //Consulta por Id, para que el administrador pueda ver los detalles de un alojamiento
@@ -43,17 +48,17 @@ public class AlojamientoRepositorio:IAlojamientoRepositorio
             return alojamiento;
         }
     }
-    
+
     public Boolean alojamientoDisponible(int id, DateTime fechaDesde, DateTime fechaHasta)
     {
         using (var db = new EntidadesContext())
         {
             var reservas = db.Reservas
-                .Where(r => r.IdAlojamiento == id && 
-                            r.FechaInicioEstadia.Date <= fechaHasta.Date && 
+                .Where(r => r.IdAlojamiento == id &&
+                            r.FechaInicioEstadia.Date <= fechaHasta.Date &&
                             r.FechaFinEstadia.Date >= fechaDesde.Date)
                 .ToList();
-            
+
             return !reservas.Any();
         }
     }
@@ -99,26 +104,109 @@ public class AlojamientoRepositorio:IAlojamientoRepositorio
     }
     public List<Alojamiento> ListarAlojamientosConSusReservas()
     {
-        using(var db = new EntidadesContext()){
+        using (var db = new EntidadesContext())
+        {
             return db.Alojamientos.Include(a => a.Reservas).ToList();
         }
-    } 
+    }
 
-    
+
     //Caso de uso consulta TODOS
-    public List<Alojamiento> ObtenerTodos(){
-        using (var db=new EntidadesContext()){
+    public List<Alojamiento> ObtenerTodos()
+    {
+        using (var db = new EntidadesContext())
+        {
             List<Alojamiento> resultado = db.Alojamientos.ToList();
-            return resultado;  
+            return resultado;
         }
     }
 
 
     //Caso de uso alojamiento MODIFICACION
-    public void Modificar(Alojamiento e){
-        using(var db=new EntidadesContext()){  
+    public void Modificar(Alojamiento e)
+    {
+        using (var db = new EntidadesContext())
+        {
             db.Alojamientos.Update(e);
             db.SaveChanges();
         }
     }
+
+    public void DeshabilitarPeriodo(int alojamientoId, DateTime desde, DateTime hasta)
+    {
+        using (var db = new EntidadesContext())
+        {
+            var nuevoPeriodo = new PeriodoNoDisponible
+            {
+                AlojamientoId = alojamientoId,
+                FechaInicio = desde.Date,
+                FechaFin = hasta.Date
+            };
+            db.PeriodosNoDisponibles.Add(nuevoPeriodo);
+            db.SaveChanges();
+        }
+    }
+
+    public void HabilitarPeriodo(int alojamientoId, DateTime desde, DateTime hasta)
+    {
+        using (var db = new EntidadesContext())
+        {
+            var periodos = db.PeriodosNoDisponibles
+                .Where(p => p.AlojamientoId == alojamientoId &&
+                            p.FechaInicio >= desde.Date &&
+                            p.FechaFin <= hasta.Date)
+                .ToList();
+
+            db.PeriodosNoDisponibles.RemoveRange(periodos);
+            db.SaveChanges();
+        }
+    }
+
+    public async Task<List<PeriodoNoDisponible>> ObtenerPeriodosNoDisponiblesAsync(int alojamientoId)
+    {
+        using (var db = new EntidadesContext())
+        {
+            return await db.PeriodosNoDisponibles
+                .Where(p => p.AlojamientoId == alojamientoId)
+                .ToListAsync();
+        }
+    }
+
+
+    public async Task AgregarPeriodoNoDisponible(int alojamientoId, PeriodoNoDisponible periodo)
+    {
+        using (var db = new EntidadesContext())
+        {
+            var alojamiento = await db.Alojamientos
+                .Include(a => a.FechasNoDisponibles)
+                .FirstOrDefaultAsync(a => a.Id == alojamientoId);
+
+            if (alojamiento == null)
+                throw new Exception("Alojamiento no encontrado.");
+
+            alojamiento.FechasNoDisponibles.Add(periodo);
+
+            await db.SaveChangesAsync();
+        }
+    }
+
+    public async Task EliminarPeriodoNoDisponible(int alojamientoId, PeriodoNoDisponible periodo)
+    {
+        using (var db = new EntidadesContext())
+        {
+            var alojamiento = await db.Alojamientos
+                .Include(a => a.FechasNoDisponibles)
+                .FirstOrDefaultAsync(a => a.Id == alojamientoId);
+
+            if (alojamiento == null)
+                throw new Exception("Alojamiento no encontrado.");
+
+            alojamiento.FechasNoDisponibles.RemoveAll(
+                p => p.FechaInicio == periodo.FechaInicio && p.FechaFin == periodo.FechaFin
+            );
+
+            await db.SaveChangesAsync();
+        }
+    }
+
 }

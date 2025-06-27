@@ -24,6 +24,7 @@ public class Alojamiento
     public string? InformacionAdicional { get; set; }
     public List<Reserva> Reservas { get; set; } = new List<Reserva>();
     public List<String> Imagenes { get; set; } = new List<string>();
+    public List<PeriodoNoDisponible> FechasNoDisponibles { get; set; } = new List<PeriodoNoDisponible>();
 
 
 }
