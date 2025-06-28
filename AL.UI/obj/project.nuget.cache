@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kUm9OSMOmYs=",
+  "dgSpecHash": "jv2ik+lgrrg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\al.ui\\AL.UI.csproj",
+  "projectFilePath": "C:\\Users\\maria\\AlquilandoWeb\\al.ui\\AL.UI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\maria\\.nuget\\packages\\microsoft.data.sqlite.core\\9.0.5\\microsoft.data.sqlite.core.9.0.5.nupkg.sha512",
     "C:\\Users\\maria\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.5\\microsoft.entityframeworkcore.9.0.5.nupkg.sha512",

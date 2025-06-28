@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Aplicacion\\AL.Aplicacion.csproj",
+      "projectUniqueName": "C:\\Users\\maria\\AlquilandoWeb\\AL.Aplicacion\\AL.Aplicacion.csproj",
       "projectName": "AL.Aplicacion",
-      "projectPath": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Aplicacion\\AL.Aplicacion.csproj",
+      "projectPath": "C:\\Users\\maria\\AlquilandoWeb\\AL.Aplicacion\\AL.Aplicacion.csproj",
       "packagesPath": "C:\\Users\\maria\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Aplicacion\\obj\\",
+      "outputPath": "C:\\Users\\maria\\AlquilandoWeb\\AL.Aplicacion\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\maria\\AppData\\Roaming\\NuGet\\NuGet.Config"

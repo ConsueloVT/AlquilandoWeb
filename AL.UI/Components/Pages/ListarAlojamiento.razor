@@ -1,9 +1,10 @@
-﻿@page "/alojamientos"
+@page "/alojamientos"
 @layout AL.UI.Components.Layout.AdminLayout
 @rendermode InteractiveServer
 @inject IAlojamientoRepositorio AlojamientoRepositorio
 @inject NavigationManager NavigationManager
 @inject IServicioSesion ServicioSesion
+
 
 <button @onclick="VolverAtras" class="btn btn-primary">Volver</button>
 
@@ -34,12 +35,21 @@ else
                     <td>@alojamiento.Nombre</td>
                     <td>@alojamiento.Ciudad</td>
                     <td>
-                        @if ( ServicioSesion.Rol == RolUsuario.Administrador)
+                        @if (ServicioSesion.Rol == RolUsuario.Administrador)
                         {
-                            <div class="card" style="width: 10rem;">
-                                <div class="card-body">
-                                    <h5 class="card-title">Editar</h5>
-                                    <a href="/editar-alojamiento/@alojamiento.Id" class="btn btn-warning btn-sm">Ir</a>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="card" style="width: 10rem;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Editar</h5>
+                                        <a href="/editar-alojamiento/@alojamiento.Id" class="btn btn-warning btn-sm">Ir</a>
+                                    </div>
+                                </div>
+
+                                <div class="card" style="width: 10rem;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Fechas</h5>
+                                        <a href="/gestionar-fechas/@alojamiento.Id" class="btn btn-secondary btn-sm">Administrar</a>
+                                    </div>
                                 </div>
                             </div>
                         }
@@ -52,7 +62,7 @@ else
 
 @code {
     private RolUsuario rol => ServicioSesion.Rol;
-    List<Alojamiento>? _alojamientos= new();
+    List<Alojamiento>? _alojamientos = new();
     private bool _usuarioInicializado = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -62,23 +72,25 @@ else
             await ServicioSesion.InicializarUsuarioAsync();
             _usuarioInicializado = true;
             _alojamientos = AlojamientoRepositorio.ObtenerTodos();
-            
+
             StateHasChanged(); // Refresca la UI si es necesario
         }
     }
-    /*
-    protected override async Task OnInitializedAsync()
-    {
-      _alojamientos = AlojamientoRepositorio.ObtenerTodos();
-    }
-*/
+
     void EditarAlojamiento(int id)
     {
         Console.WriteLine($"Redirigiendo a editar alojamiento con ID: {id}");
         NavigationManager.NavigateTo($"/alojamiento/editar/{id}");
     }
+
+    void GestionarFechas(int id)
+    {
+        Console.WriteLine($"Redirigiendo a gestionar fechas para alojamiento con ID: {id}");
+        NavigationManager.NavigateTo($"/gestionar-fechas/{id}");
+    }
+
     void VolverAtras()
     {
-      NavigationManager.NavigateTo("/CuentaAdministrador");
+        NavigationManager.NavigateTo("/CuentaAdministrador");
     }
 }

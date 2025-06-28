@@ -18,5 +18,10 @@ public interface IAlojamientoRepositorio
 
     public List<Alojamiento> ObtenerPorCiudad(string ciudad);
     public List<Alojamiento> ObtenerPorDisponibilidad(List<Alojamiento> a,DateTime fechaDesde, DateTime fechaHasta);
+    void DeshabilitarPeriodo(int alojamientoId, DateTime desde, DateTime hasta);
+    void HabilitarPeriodo(int alojamientoId, DateTime desde, DateTime hasta);
+    Task<List<PeriodoNoDisponible>> ObtenerPeriodosNoDisponiblesAsync(int alojamientoId);
+    Task AgregarPeriodoNoDisponible(int alojamientoId, PeriodoNoDisponible periodo);
+    Task EliminarPeriodoNoDisponible(int alojamientoId, PeriodoNoDisponible periodo);
 
 }

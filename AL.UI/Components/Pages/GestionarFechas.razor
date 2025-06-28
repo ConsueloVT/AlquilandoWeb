@@ -1,0 +1,110 @@
+@page "/gestionar-fechas/{AlojamientoId:int}"
+@layout AL.UI.Components.Layout.AdminLayout
+@inject IServicioSesion ServicioSesion
+@inject IAlojamientoRepositorio AlojamientoRepositorio
+@inject NavigationManager NavigationManager
+
+<h3>Deshabilitar Fechas - Alojamiento: @AlojamientoId</h3>
+
+@if (_usuarioInicializado)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    @if (periodosNoDisponibles.Any())
+    {
+        <ul class="list-group mb-3">
+            @foreach (var p in periodosNoDisponibles)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <strong>@p.FechaInicio.ToShortDateString()</strong> a <strong>@p.FechaFin.ToShortDateString()</strong>
+                    </span>
+                    <button class="btn btn-danger btn-sm" @onclick="async () => await Eliminar(p.Id)">Eliminar</button>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No hay fechas deshabilitadas aún.</p>
+    }
+
+    <h5>Deshabilitar nuevas fechas</h5>
+    <div class="mb-3">
+        <label>Desde:</label>
+        <input type="date" @bind="fechaInicio" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="mb-3">
+        <label>Hasta:</label>
+        <input type="date" @bind="fechaFin" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+    </div>
+    <button class="btn btn-primary" @onclick="async () => await Agregar()">Deshabilitar</button>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert alert-info mt-2">@mensaje</div>
+    }
+}
+
+@code {
+    [Parameter]
+    public int AlojamientoId { get; set; }
+
+    private List<PeriodoNoDisponible> periodosNoDisponibles = new();
+    private DateTime fechaInicio = DateTime.Today;
+    private DateTime fechaFin = DateTime.Today.AddDays(1);
+    private string mensaje = "";
+    private bool _usuarioInicializado = false;
+
+    // ✅ Mover la inicialización del usuario a este método
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await ServicioSesion.InicializarUsuarioAsync();
+            periodosNoDisponibles = await AlojamientoRepositorio.ObtenerPeriodosNoDisponiblesAsync(AlojamientoId);
+            _usuarioInicializado = true;
+
+            StateHasChanged(); // fuerza renderizado luego de async
+        }
+    }
+
+    private async Task Agregar()
+    {
+        if (fechaInicio >= fechaFin)
+        {
+            mensaje = "La fecha de inicio debe ser anterior a la de fin.";
+            return;
+        }
+
+        var nuevo = new PeriodoNoDisponible
+        {
+            AlojamientoId = AlojamientoId,
+            FechaInicio = fechaInicio,
+            FechaFin = fechaFin
+        };
+
+        await AlojamientoRepositorio.AgregarPeriodoNoDisponible(AlojamientoId, nuevo);
+        periodosNoDisponibles = await AlojamientoRepositorio.ObtenerPeriodosNoDisponiblesAsync(AlojamientoId);
+
+        fechaInicio = DateTime.Today;
+        fechaFin = DateTime.Today.AddDays(1);
+        mensaje = "Fechas deshabilitadas correctamente.";
+
+        await Task.Delay(3000);
+        mensaje = "";
+    }
+
+    private async Task Eliminar(int idPeriodo)
+    {
+        var periodo = periodosNoDisponibles.FirstOrDefault(p => p.Id == idPeriodo);
+        if (periodo != null)
+        {
+            await AlojamientoRepositorio.EliminarPeriodoNoDisponible(AlojamientoId, periodo);
+            periodosNoDisponibles = await AlojamientoRepositorio.ObtenerPeriodosNoDisponiblesAsync(AlojamientoId);
+            mensaje = "Período eliminado.";
+        }
+    }
+}
