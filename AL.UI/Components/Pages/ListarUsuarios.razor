@@ -5,8 +5,6 @@
 @inject IUsuarioRepositorio UsuarioRepositorio
 @inject IReservasRepositorio ReservasRepositorio
 
-
-
 <h3>Usuarios registrados</h3>
 
 @if (servicioSesion.Rol == RolUsuario.Administrador || servicioSesion.Rol == RolUsuario.Encargado)
@@ -17,15 +15,21 @@
         <button class="btn btn-primary mt-2" @onclick="FiltrarUsuarios">Aplicar Filtro</button>
     </div>
 
-    @if (usuariosFiltrados != null)
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert alert-info">@mensaje</div>
+    }
+
+    @if (usuariosFiltrados != null && usuariosFiltrados.Any())
     {
         <table class="table">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Nombre</th>
+                    <th>Apellido</th>
                     <th>Email</th>
-                    <th>Reservas Realizadas</th>
+                    <th>Acción</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,21 +40,33 @@
                         <td>@u.Nombre</td>
                         <td>@u.Apellido</td>
                         <td>@u.CorreoElectronico</td>
-                        <button @onclick="() => HabilitarUsuario(u.Id)">Habilitar</button>
-                        <button @onclick="() => DeshabilitarUsuario(u.Id)">Deshabilitar</button>
+                        <td>
+                            @if (u.EstaHabilitado)
+                            {
+                                <button class="btn btn-danger btn-sm" @onclick="() => DeshabilitarUsuario(u.Id)">Deshabilitar</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-success btn-sm" @onclick="() => HabilitarUsuario(u.Id)">Habilitar</button>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>
         </table>
     }
-}    
-
+    else
+    {
+        <p>No hay usuarios para mostrar.</p>
+    }
+}
 
 
 @code {
     private int cantidadMeses = 1;
     private List<Usuario> usuariosFiltrados = new();
     private bool _usuarioInicializado = false;
+    private string? mensaje;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -64,12 +80,11 @@
                 _usuarioInicializado = true;
                 servicioSesion.IniciarSesion();
             }
-            if (servicioSesion.Rol != RolUsuario.Administrador)
+            if (servicioSesion.Rol != RolUsuario.Administrador && servicioSesion.Rol != RolUsuario.Encargado)
             {
                 NavigationManager.NavigateTo("/", true);
-
             }
-            StateHasChanged(); // Refresca la UI si es necesario
+            StateHasChanged(); // Refresca la UI
         }
     }
 
@@ -77,15 +92,36 @@
     {
         usuariosFiltrados = UsuarioRepositorio.ListarUsuariosConReservasEnUltimosMeses(cantidadMeses);
     }
+
     private void HabilitarUsuario(int usuarioId)
     {
-        var casoDeUso = new HabilitarUsuarioCasoDeUso(UsuarioRepositorio);
-        casoDeUso.Ejecutar(usuarioId);
+        try
+        {
+            var casoDeUso = new HabilitarUsuarioCasoDeUso(UsuarioRepositorio);
+            casoDeUso.Ejecutar(usuarioId);
+            mensaje = "Usuario habilitado correctamente.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al habilitar: {ex.Message}";
+        }
+
+        FiltrarUsuarios();
     }
 
     private void DeshabilitarUsuario(int usuarioId)
     {
-        var casoDeUso = new DeshabilitarUsuarioCasoDeUso(UsuarioRepositorio, ReservasRepositorio);
-        casoDeUso.Ejecutar(usuarioId);
+        try
+        {
+            var casoDeUso = new DeshabilitarUsuarioCasoDeUso(UsuarioRepositorio, ReservasRepositorio);
+            casoDeUso.Ejecutar(usuarioId);
+            mensaje = "Usuario deshabilitado correctamente.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al deshabilitar: {ex.Message}";
+        }
+
+        FiltrarUsuarios();
     }
 }
