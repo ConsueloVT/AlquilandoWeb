@@ -67,8 +67,8 @@ else
     private bool _usuarioInicializado = false;
     private string mensaje = "";
 
-    [Inject] private ArchivarPublicacionCasoDeUso ArchivarPublicacion { get; set; }
-    [Inject] private DesarchivarPublicacionCasoDeUso DesarchivarPublicacion { get; set; }
+    [Inject] private ArchivarPublicacionCasoDeUso? ArchivarPublicacion { get; set; }
+    [Inject] private DesarchivarPublicacionCasoDeUso? DesarchivarPublicacion { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -102,8 +102,15 @@ else
     {
         try
         {
-            await ArchivarPublicacion.Ejecutar(id);
-            mensaje = $"Publicación {id} archivada.";
+            if (ArchivarPublicacion != null)
+            {
+                await ArchivarPublicacion.Ejecutar(id);
+                mensaje = $"Publicación {id} archivada.";
+            }
+            else
+            {
+                mensaje = "No se pudo archivar la publicación: servicio no disponible.";
+            }
         }
         catch (Exception ex)
         {
@@ -118,8 +125,15 @@ else
     {
         try
         {
-            await DesarchivarPublicacion.Ejecutar(id);
-            mensaje = $"Publicación {id} desarchivada.";
+            if (DesarchivarPublicacion != null)
+            {
+                await DesarchivarPublicacion.Ejecutar(id);
+                mensaje = $"Publicación {id} desarchivada.";
+            }
+            else
+            {
+                mensaje = "No se pudo desarchivar la publicación: servicio no disponible.";
+            }
         }
         catch (Exception ex)
         {

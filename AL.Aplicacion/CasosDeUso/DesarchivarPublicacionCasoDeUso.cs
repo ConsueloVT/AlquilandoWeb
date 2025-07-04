@@ -14,7 +14,15 @@ public class DesarchivarPublicacionCasoDeUso
     {
         var alojamiento = await _alojamientoRepositorio.ObtenerPorId(alojamientoId);
 
-        alojamiento.Estado = Enumerativos.EstadoPublicacion.Publicado;
-        _alojamientoRepositorio.Modificar(alojamiento);
+        if (alojamiento != null)
+        {
+            alojamiento.Estado = Enumerativos.EstadoPublicacion.Publicado;
+            _alojamientoRepositorio.Modificar(alojamiento);
+        }
+        else
+        {
+            // Manejar el caso cuando alojamiento es null, por ejemplo lanzar una excepción o registrar un error
+            throw new InvalidOperationException($"No se encontró alojamiento con ID {alojamientoId}");
+        }
     }
 }
