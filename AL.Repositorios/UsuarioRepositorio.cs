@@ -3,6 +3,7 @@ using AL.Aplicacion.Entidades;
 using AL.Aplicacion.Interfaces;
 using AL.Aplicacion.Enumerativos;
 using Microsoft.EntityFrameworkCore;
+using AL.Aplicacion.Excepciones;
 namespace AL.Repositorios;
 
 public class UsuarioRepositorio : IUsuarioRepositorio
@@ -90,10 +91,19 @@ public class UsuarioRepositorio : IUsuarioRepositorio
     {
         using (var db = new EntidadesContext())
         {
-            Usuario? usuario = db.Usuarios.Where(x => x.CorreoElectronico == correo).SingleOrDefault();
+            Usuario? usuario = db.Usuarios
+                .Where(x => x.CorreoElectronico == correo)
+                .SingleOrDefault();
+
+            if (usuario != null && !usuario.EstaHabilitado)
+            {
+                throw new UsuarioDeshabilitadoException(correo);
+            }
+
             return usuario;
         }
     }
+
     public bool tieneReservasSolapadas(DateTime fechaDesde, DateTime fechaHasta, int idUsuario)
     {
         using (var db = new EntidadesContext())

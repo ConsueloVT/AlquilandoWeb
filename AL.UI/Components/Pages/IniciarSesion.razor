@@ -58,7 +58,10 @@
         }
         catch (Exception ex)
         {
-            ErrorMessage = $"{ex.Message}";
+            if (ex is UsuarioDeshabilitadoException)
+                ErrorMessage = ex.Message;
+            else
+                ErrorMessage = "Correo o contraseña incorrectos.";
         }
         _procesando = false;
     }
