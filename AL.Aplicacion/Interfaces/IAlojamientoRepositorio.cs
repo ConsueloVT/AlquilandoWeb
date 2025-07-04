@@ -19,5 +19,7 @@ public interface IAlojamientoRepositorio
     public List<Alojamiento> ObtenerPorCiudad(string ciudad);
     public List<Alojamiento> ObtenerPorDisponibilidad(List<Alojamiento> a, DateTime fechaDesde, DateTime fechaHasta);
     public double ObtenerPromedio(Alojamiento a);
+    List<Alojamiento> ObtenerPublicados();
+
 
 }

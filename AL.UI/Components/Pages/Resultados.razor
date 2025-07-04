@@ -96,7 +96,9 @@ else
             
             if (!string.IsNullOrWhiteSpace(ciudad) && desde.HasValue && hasta.HasValue)
             {
-                alojamientos = Buscar.Ejecutar(ciudad, desde.Value, hasta.Value);
+                alojamientos = Buscar.Ejecutar(ciudad, desde.Value, hasta.Value)
+                .Where(a => a.Estado == EstadoPublicacion.Publicado)
+                .ToList();
             }
 
 

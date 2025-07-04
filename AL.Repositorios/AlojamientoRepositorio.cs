@@ -2,6 +2,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using AL.Aplicacion.Entidades;
 using AL.Aplicacion.Interfaces;
+using AL.Aplicacion.Enumerativos;
 namespace AL.Repositorios;
 
 public class AlojamientoRepositorio : IAlojamientoRepositorio
@@ -142,4 +143,15 @@ public class AlojamientoRepositorio : IAlojamientoRepositorio
             db.SaveChanges();
         }
     }
+
+    public List<Alojamiento> ObtenerPublicados()
+    {
+        using (var db = new EntidadesContext())
+        {
+            return db.Alojamientos
+                .Where(a => a.Estado == EstadoPublicacion.Publicado)
+                .ToList();
+        }
+    }
+
 }

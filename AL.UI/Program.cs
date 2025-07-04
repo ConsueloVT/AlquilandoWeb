@@ -26,6 +26,9 @@ builder.Services.AddTransient<ReservaConsultaTodosPorUsuario>();
 builder.Services.AddTransient<ReservaEnviarMensaje>();
 builder.Services.AddTransient<ReservaConsultaTodos>();
 builder.Services.AddTransient<GestionarReservasCasoDeUso>();
+builder.Services.AddScoped<ArchivarPublicacionCasoDeUso>();
+builder.Services.AddScoped<DesarchivarPublicacionCasoDeUso>();
+
 
 builder.Services.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddSingleton<ITarjetaRepositorio, TarjetaRepositorio>();
