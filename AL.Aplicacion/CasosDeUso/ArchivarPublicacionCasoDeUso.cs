@@ -1,6 +1,8 @@
 using AL.Aplicacion.Interfaces;
 using AL.Aplicacion.Excepciones;
+
 namespace AL.Aplicacion.CasosDeUso;
+
 public class ArchivarPublicacionCasoDeUso
 {
     private readonly IAlojamientoRepositorio _alojamientoRepositorio;
@@ -12,7 +14,7 @@ public class ArchivarPublicacionCasoDeUso
         _reservasRepositorio = reservasRepositorio;
     }
 
-    public async Task Ejecutar(int alojamientoId)
+    public async Task<string> Ejecutar(int alojamientoId)
     {
         var alojamiento = await _alojamientoRepositorio.ObtenerPorId(alojamientoId);
 
@@ -20,7 +22,7 @@ public class ArchivarPublicacionCasoDeUso
         var reservas = _reservasRepositorio.ObtenerReservasPorAlojamientoId(alojamientoId);
 
         bool tieneReservaEnCurso = reservas.Any(r => r.FechaInicioEstadia <= hoy && hoy <= r.FechaFinEstadia);
-        if (tieneReservaEnCurso && alojamiento != null)
+        if (tieneReservaEnCurso)
         {
             throw new AlojamientoConReservaEnCursoException(alojamiento.Nombre);
         }
@@ -28,13 +30,19 @@ public class ArchivarPublicacionCasoDeUso
         bool tieneReservasFuturas = reservas.Any(r => r.FechaInicioEstadia > hoy);
         if (tieneReservasFuturas)
         {
-            _reservasRepositorio.CancelarReservasFuturas(alojamientoId, hoy);
+            _reservasRepositorio.CancelarReservasFuturasPorAlojamiento(alojamientoId);
         }
 
-        if (alojamiento != null)
+        alojamiento.Estado = Enumerativos.EstadoPublicacion.Archivado;
+        _alojamientoRepositorio.Modificar(alojamiento);
+
+        if (tieneReservasFuturas)
         {
-            alojamiento.Estado = Enumerativos.EstadoPublicacion.Archivado;
-            _alojamientoRepositorio.Modificar(alojamiento);
+            return "Publicación archivada. Las reservas futuras han sido canceladas.";
+        }
+        else
+        {
+            return "Publicación archivada.";
         }
     }
 }
