@@ -34,7 +34,7 @@ public class DeshabilitarUsuarioCasoDeUso
 
         bool tieneFuturas = reservas.Any(r => r.FechaInicioEstadia > hoy);
 
-        if (tieneFuturas)
+        if (tieneFuturas) //escenario2
             _reservaRepositorio.CancelarReservasFuturas(usuarioId, hoy);
 
         usuario.EstaHabilitado = false;

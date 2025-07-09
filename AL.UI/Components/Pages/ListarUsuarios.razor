@@ -114,8 +114,15 @@
         try
         {
             var casoDeUso = new DeshabilitarUsuarioCasoDeUso(UsuarioRepositorio, ReservasRepositorio);
+            bool reservasFuturas = ReservasRepositorio.TieneReservasFuturasPorUsuario(usuarioId);
             casoDeUso.Ejecutar(usuarioId);
-            mensaje = "Usuario deshabilitado correctamente.";
+            if (reservasFuturas){
+                mensaje = "Usuario deshabilitado correctamente. Se han eliminado las reservas futuras.";
+            }
+            else
+            {
+                mensaje = "Usuario deshabilitado correctamente.";
+            }
         }
         catch (Exception ex)
         {

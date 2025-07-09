@@ -82,7 +82,7 @@ public class ReservasRepositorio : IReservasRepositorio
             db.SaveChanges();
         }
     }
-    public void CancelarReservasFuturas(int usuarioId, DateTime fechaDesde)
+    public void CancelarReservasFuturas(int usuarioId, DateTime fechaDesde) //escenario2
     {
         using (var db = new EntidadesContext())
         {
@@ -105,7 +105,7 @@ public class ReservasRepositorio : IReservasRepositorio
                 r.FechaFinEstadia >= hoy);
         }
     }
-    public bool TieneReservasFuturas(int alojamientoId)
+    public bool TieneReservasFuturas(int alojamientoId) //escenario2
     {
         using (var db = new EntidadesContext())
         {
@@ -115,6 +115,17 @@ public class ReservasRepositorio : IReservasRepositorio
                 r.FechaInicioEstadia > hoy);
         }
     }
+    public bool TieneReservasFuturasPorUsuario(int usuarioId)
+    {
+        using (var db = new EntidadesContext())
+        {
+            var hoy = DateTime.Today;
+            return db.Reservas.Any(r =>
+                r.IdUsuario == usuarioId &&
+                r.FechaInicioEstadia > hoy);
+        }
+    }
+
     public void CancelarReservasFuturasPorAlojamiento(int alojamientoId)
     {
         using (var db = new EntidadesContext())
