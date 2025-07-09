@@ -15,4 +15,5 @@ public class Usuario
     public string SalContraseña { get; set; } = "";
     public List<Reserva> ListaReservas { get; set; } = new List<Reserva>();
     public bool EstaHabilitado { get; set; } = true;
+    public int DescuentoProximaReserva { get; set; } = 0;
 }

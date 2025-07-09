@@ -99,7 +99,11 @@ else
     }
     void VolverAtras()
     {
-      NavigationManager.NavigateTo("/CuentaAdministrador");
+        if(ServicioSesion.Rol == RolUsuario.Administrador)
+            NavigationManager.NavigateTo("/CuentaAdministrador");
+        else if(ServicioSesion.Rol == RolUsuario.Encargado)
+            NavigationManager.NavigateTo("/CuentaEncargado");
+
     }
 
 }

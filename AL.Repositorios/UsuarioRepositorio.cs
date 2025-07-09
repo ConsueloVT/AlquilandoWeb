@@ -1,9 +1,8 @@
-using System;
 using AL.Aplicacion.Entidades;
 using AL.Aplicacion.Interfaces;
 using AL.Aplicacion.Enumerativos;
-using Microsoft.EntityFrameworkCore;
 using AL.Aplicacion.Excepciones;
+using Microsoft.EntityFrameworkCore;
 namespace AL.Repositorios;
 
 public class UsuarioRepositorio : IUsuarioRepositorio
@@ -86,6 +85,14 @@ public class UsuarioRepositorio : IUsuarioRepositorio
         }
     }
 
+    public async Task<Usuario?> ObtenerPorIdAsync(int idUsuario)
+    {
+        using (var db = new EntidadesContext())
+        {
+            return await db.Usuarios.Where(x => x.Id == idUsuario).SingleOrDefaultAsync();
+        }
+    }
+
     //Para iniciar Sesion
     public Usuario? IniciarSesion(String correo)
     {
@@ -140,12 +147,46 @@ public class UsuarioRepositorio : IUsuarioRepositorio
         }
 
     }
-    public List<Usuario> ListarUsuariosConReservasEnUltimosMeses(int cantidadMeses) {
-        //Aplicar la logica para filtrar usuarios con reservas en los ultimos meses, lo dejo provisionalmente asi:
+    // Listar usuarios con reservas en los últimos meses
+    public List<Usuario> ListarUsuariosConReservasEnUltimosMeses(int cantidadMeses)
+    {
         using (var db = new EntidadesContext())
         {
-            return db.Usuarios.ToList();
+            var fechaLimite = DateTime.Now.AddMonths(-cantidadMeses);
+
+            var usuariosConReservas = db.Reservas
+                .Where(r => r.FechaInicioEstadia >= fechaLimite)
+                .Select(r => r.IdUsuario)
+                .Distinct()
+                .ToList();
+
+            var usuarios = db.Usuarios
+                .Where(u => usuariosConReservas.Contains(u.Id))
+                .ToList();
+
+            return usuarios;
         }
-     }
+    }
+    public async Task AsignarDescuento(int idUsuario, int porcentaje)
+    {
+        using (var db = new EntidadesContext())
+        {
+            var usuario = db.Usuarios.SingleOrDefault(u => u.Id == idUsuario);
+            if (usuario != null)
+            {
+                usuario.DescuentoProximaReserva = porcentaje;
+                db.Usuarios.Update(usuario);
+                await db.SaveChangesAsync();
+            }
+        }
+    }
+
+    public bool ExisteUsuarioConEmail(string email)
+    {
+        using (var db = new EntidadesContext())
+        {
+            return db.Usuarios.Any(u => u.CorreoElectronico == email);
+        }
+    }
 
 }

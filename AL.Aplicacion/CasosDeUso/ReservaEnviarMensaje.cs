@@ -4,13 +4,14 @@ using AL.Aplicacion.Interfaces;
 using AL.Aplicacion.Enumerativos;
 namespace AL.Aplicacion.CasosDeUso;
 
-public class ReservaEnviarMensaje(IReservasRepositorio _reservaRepo, IUsuarioRepositorio _usuarioRepo,IServicioChat _chat): ReservaCasoDeUso(_reservaRepo)
+public class ReservaEnviarMensaje(IReservasRepositorio _reservaRepo, IUsuarioRepositorio _usuarioRepo, IServicioChat _chat) : ReservaCasoDeUso(_reservaRepo)
 {
     public async Task Ejecutar(int reservaId, Mensaje nuevoMensaje)
     {
         Reserva? reserva = Repositorio.ObtenerPorId(reservaId);
         Usuario? usuario = _usuarioRepo.ObtenerPorId(nuevoMensaje.IdEmisor);
-        if (reserva != null)
+
+        if (reserva != null && DateTime.Now <= reserva.FechaFinEstadia.AddDays(1))
         {
             if (usuario != null && usuario.Rol == RolUsuario.Usuario)
             {
@@ -40,6 +41,10 @@ public class ReservaEnviarMensaje(IReservasRepositorio _reservaRepo, IUsuarioRep
                 nuevoMensaje.IdReceptor = reserva.IdUsuario;
                 await _chat.EnviarMensajeAsync(nuevoMensaje, reserva);
             }
+        }
+        else
+        {
+            throw new Exception("No se puede enviar mensajes 7 días después de terminada la estadía.");
         }
 
     }

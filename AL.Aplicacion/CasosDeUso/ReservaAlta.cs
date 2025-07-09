@@ -24,21 +24,13 @@ public class ReservaAlta
         _servicioPago = servicioPago;
         _alojamientoRepositorio = alojamientoRepo;
     }
-    public async Task <string> Ejecutar(Reserva reserva)
+    public String Ejecutar(Reserva reserva)
     {
         var usuario = _usuarioRepositorio.ObtenerPorId(_sesion.Id);
 
         if (usuario == null)
             throw new Exception("Inicie Sesion");
 
-        var alojamiento = await _alojamientoRepositorio.ObtenerPorId(reserva.IdAlojamiento);
-        if (alojamiento == null)
-            throw new ValidacionException("El alojamiento no existe");
-        
-        int totalPersonas = reserva.CantidadDeAdultos ?? 0 + reserva.CantidadDeNiños ?? 0;
-        if (totalPersonas > alojamiento.CapacidadMaxima)
-            throw new ValidacionException($"La cantidad de personas ({totalPersonas}) excede la capacidad permitida ({alojamiento.CapacidadMaxima}).");
-            
         var tarjeta = _tarjetaRepositorio.ObtenerPorId(usuario.TarjetaId);
         if (tarjeta == null)
             throw new ValidacionException("No se encontró la tarjeta del usuario");
@@ -47,10 +39,12 @@ public class ReservaAlta
         if (!pagoExitoso)
             return "Reserva rechazada por error en el pago";
 
-        if (alojamiento.TieneInformacionAdicional)
+        bool requiereInfoAdicional = reserva.ListaInformacionAdicional != null && reserva.ListaInformacionAdicional.Count > 0;
+
+        if (requiereInfoAdicional)
         {
             reserva.EstadoReserva = EstadoReserva.Pendiente;
-            
+
             _reservasRepositorio.Agregar(reserva);
             return "La solicitud de reserva fue enviada";
         }
@@ -63,3 +57,4 @@ public class ReservaAlta
 
     }
 }
+

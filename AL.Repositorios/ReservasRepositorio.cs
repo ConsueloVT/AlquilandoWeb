@@ -82,7 +82,7 @@ public class ReservasRepositorio : IReservasRepositorio
             db.SaveChanges();
         }
     }
-    public void CancelarReservasFuturas(int usuarioId, DateTime fechaDesde) //escenario2
+    public void CancelarReservasFuturas(int usuarioId, DateTime fechaDesde)
     {
         using (var db = new EntidadesContext())
         {
@@ -105,7 +105,7 @@ public class ReservasRepositorio : IReservasRepositorio
                 r.FechaFinEstadia >= hoy);
         }
     }
-    public bool TieneReservasFuturas(int alojamientoId) //escenario2
+    public bool TieneReservasFuturas(int alojamientoId)
     {
         using (var db = new EntidadesContext())
         {
@@ -115,17 +115,6 @@ public class ReservasRepositorio : IReservasRepositorio
                 r.FechaInicioEstadia > hoy);
         }
     }
-    public bool TieneReservasFuturasPorUsuario(int usuarioId)
-    {
-        using (var db = new EntidadesContext())
-        {
-            var hoy = DateTime.Today;
-            return db.Reservas.Any(r =>
-                r.IdUsuario == usuarioId &&
-                r.FechaInicioEstadia > hoy);
-        }
-    }
-
     public void CancelarReservasFuturasPorAlojamiento(int alojamientoId)
     {
         using (var db = new EntidadesContext())
@@ -183,12 +172,14 @@ public class ReservasRepositorio : IReservasRepositorio
         using (var db = new EntidadesContext())
         {
             return await db.Mensajes
-            .Where(m => m.IdReceptor == usuarioId && m.IdReserva==reservaId && !m.Leido)
+            .Where(m => m.IdReceptor == usuarioId && m.IdReserva == reservaId && !m.Leido)
             .CountAsync();
-        }    
+        }
     }
-    public List<Reserva> ObtenerTodas(){
-        using (var db=new EntidadesContext()){
+    public List<Reserva> ObtenerTodas()
+    {
+        using (var db = new EntidadesContext())
+        {
             List<Reserva> resultado = db.Reservas.ToList();
             foreach (var res in resultado)
             {
@@ -204,8 +195,18 @@ public class ReservasRepositorio : IReservasRepositorio
                     }
                 }
             }
-            return resultado;  
+            return resultado;
         }
     }
-    
+    public bool TieneReservasFuturasPorUsuario(int usuarioId)
+    {
+        using (var db = new EntidadesContext())
+        {
+            var hoy = DateTime.Today;
+            return db.Reservas.Any(r =>
+                r.IdUsuario == usuarioId &&
+                r.FechaInicioEstadia > hoy);
+        }
+    }
+
 }

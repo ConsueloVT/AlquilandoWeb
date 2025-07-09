@@ -102,4 +102,23 @@ public class ServicioSesion: IServicioSesion
         OnChange?.Invoke();
 
     }
+
+    public async Task RefrescarUsuarioAsync()
+    {
+        if (Usuario != null)
+        {
+            var usuarioActualizado = await _repo.ObtenerPorIdAsync(Usuario.Id);
+            if (usuarioActualizado != null)
+            {
+                Usuario = usuarioActualizado;
+                await GuardarUsuarioAsync();
+                OnChange?.Invoke();
+            }
+        }
+    }
+
+    public async Task<bool> ExisteUsuarioConEmail(string email)
+    {
+        return await Task.FromResult(_repo.ExisteUsuarioConEmail(email));
+    }
 }

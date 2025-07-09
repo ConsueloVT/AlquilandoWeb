@@ -2,12 +2,12 @@ using AL.Aplicacion.Entidades;
 using AL.Aplicacion.Interfaces;
 namespace AL.Aplicacion.Servicios;
 
-public class ServicioChat(IReservasRepositorio reservasRepo):IServicioChat
+public class ServicioChat(IReservasRepositorio reservasRepo) : IServicioChat
 {
 
     public async Task EnviarMensajeAsync(Mensaje m, Reserva r)
     {
-        await reservasRepo.EnviarMensajeAsync(m,r);
+        await reservasRepo.EnviarMensajeAsync(m, r);
     }
 
     public async Task<List<Mensaje>> ObtenerConversacionAsync(int reservaId)
@@ -22,5 +22,5 @@ public class ServicioChat(IReservasRepositorio reservasRepo):IServicioChat
     {
         return await reservasRepo.ObtenerCantidadNoLeidosAsync(usuarioId, reservaId); // Assuming 0 is a placeholder for reservaId
     }
- 
+
 }

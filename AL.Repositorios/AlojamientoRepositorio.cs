@@ -143,7 +143,6 @@ public class AlojamientoRepositorio : IAlojamientoRepositorio
             db.SaveChanges();
         }
     }
-
     public List<Alojamiento> ObtenerPublicados()
     {
         using (var db = new EntidadesContext())
@@ -153,5 +152,4 @@ public class AlojamientoRepositorio : IAlojamientoRepositorio
                 .ToList();
         }
     }
-
 }

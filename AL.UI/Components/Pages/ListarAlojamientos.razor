@@ -7,12 +7,12 @@
 
 <h3>Alojamientos Publicados</h3>
 
+<button @onclick="VolverAtras" class="btn btn-primary">Volver</button>
+
 @if (!string.IsNullOrEmpty(mensaje))
 {
-    <div class="alert @claseMensaje mt-2">@mensaje</div>
+    <div class="alert alert-info mt-2">@mensaje</div>
 }
-
-<button @onclick="VolverAtras" class="btn btn-primary">Volver</button>
 
 @if (_alojamientos is null)
 {
@@ -66,7 +66,6 @@ else
     List<Alojamiento>? _alojamientos = new();
     private bool _usuarioInicializado = false;
     private string mensaje = "";
-    private string claseMensaje = "alert-info";
 
     [Inject] private ArchivarPublicacionCasoDeUso? ArchivarPublicacion { get; set; }
     [Inject] private DesarchivarPublicacionCasoDeUso? DesarchivarPublicacion { get; set; }
@@ -84,12 +83,12 @@ else
                 return;
             }
 
-            await CargarAlojamientos();
+            CargarAlojamientos();
             StateHasChanged();
         }
     }
 
-    async Task CargarAlojamientos()
+    public void CargarAlojamientos()
     {
         _alojamientos = AlojamientoRepositorio.ObtenerTodos();
     }
@@ -105,28 +104,20 @@ else
         {
             if (ArchivarPublicacion != null)
             {
-                var resultado = await ArchivarPublicacion.Ejecutar(id);
-                mensaje = resultado;
-                claseMensaje = "alert-success";
+                await ArchivarPublicacion.Ejecutar(id);
+                mensaje = $"Publicación {id} archivada.";
             }
             else
             {
                 mensaje = "No se pudo archivar la publicación: servicio no disponible.";
-                claseMensaje = "alert-danger";
             }
-        }
-        catch (AlojamientoConReservaEnCursoException ex)
-        {
-            mensaje = ex.Message;
-            claseMensaje = "alert-info";
         }
         catch (Exception ex)
         {
-            mensaje = $"Error inesperado: {ex.Message}";
-            claseMensaje = "alert-danger";
+            mensaje = ex.Message;
         }
 
-        await CargarAlojamientos();
+        CargarAlojamientos();
         StateHasChanged();
     }
 
@@ -137,22 +128,19 @@ else
             if (DesarchivarPublicacion != null)
             {
                 await DesarchivarPublicacion.Ejecutar(id);
-                mensaje = $"Publicación desarchivada exitosamente.";
-                claseMensaje = "alert-success";
+                mensaje = $"Publicación {id} desarchivada.";
             }
             else
             {
                 mensaje = "No se pudo desarchivar la publicación: servicio no disponible.";
-                claseMensaje = "alert-danger";
             }
         }
         catch (Exception ex)
         {
             mensaje = ex.Message;
-            claseMensaje = "alert-danger";
         }
 
-        await CargarAlojamientos();
+        CargarAlojamientos();
         StateHasChanged();
     }
 }

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "03rYnqsJiANCKszpw5nVq2vl8clJ33MtolKYT0Fzu08=",
+  "Hash": "uuadGJzI7AyBOukR8YKg3K24ktxy7KDTpcQnfMXKiYw=",
   "Source": "AL.UI",
   "BasePath": "_content/AL.UI",
   "Mode": "Default",
@@ -262,6 +262,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\site.js"
+    },
+    {
+      "Identity": "C:\\Users\\maria\\Downloads\\Consu\\AlquilandoWeb\\al.ui\\wwwroot\\uploads\\064e1e94-291a-4569-afd4-811854a09f82_departamento-una-habitacion.jpg",
+      "SourceId": "AL.UI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\maria\\Downloads\\Consu\\AlquilandoWeb\\al.ui\\wwwroot\\",
+      "BasePath": "_content/AL.UI",
+      "RelativePath": "uploads/064e1e94-291a-4569-afd4-811854a09f82_departamento-una-habitacion.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\064e1e94-291a-4569-afd4-811854a09f82_departamento-una-habitacion.jpg"
     },
     {
       "Identity": "C:\\Users\\maria\\Downloads\\Consu\\AlquilandoWeb\\al.ui\\wwwroot\\uploads\\805a4468-3cce-45ea-b70a-3ec7c0866067_dpto4B.jpg",

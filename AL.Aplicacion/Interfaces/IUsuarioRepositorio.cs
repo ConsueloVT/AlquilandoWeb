@@ -18,4 +18,7 @@ public interface IUsuarioRepositorio
     public Usuario? ObtenerAdministrador();
     public Usuario? ObtenerEncargado();
     public List<Usuario> ListarUsuariosConReservasEnUltimosMeses(int cantidadMeses);
+    public Task AsignarDescuento(int idUsuario, int porcentaje);
+    Task<Usuario?> ObtenerPorIdAsync(int id);
+    bool ExisteUsuarioConEmail(string email);
 }

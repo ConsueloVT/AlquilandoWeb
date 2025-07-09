@@ -5,7 +5,7 @@ namespace AL.Aplicacion.Validadores;
 
 public static class PuntuarValidador
 {
-    public static bool Validar(Reserva r,out String mensajeError)
+    public static bool Validar(Reserva r, out String mensajeError)
     {
         mensajeError = "";
         if (r.Puntuacion > 0 && r.Puntuacion <= 5)
@@ -16,7 +16,8 @@ public static class PuntuarValidador
         {
             mensajeError += "El usuario debe haberse alojado previamente\n";
         }
-        if (DateTime.Now.Day - r.FechaFinEstadia.Day > 15)
+        //Para poder probar lo voy a dejar en 1 dia despues
+        if ((DateTime.Now - r.FechaFinEstadia).TotalDays > 1)
         {
             mensajeError += "Plazo para puntuar el alojamiento vencido\n";
         }

@@ -3,7 +3,7 @@ using AL.Aplicacion.Interfaces;
 using AL.Aplicacion.Enumerativos;
 namespace AL.Aplicacion.CasosDeUso;
 
-public class ReservaConsultaTodosPorUsuario(IReservasRepositorio repositorio,IServicioChat chat,IServicioActualizacionEstadoReserva servicioActualizarEstado) : ReservaCasoDeUso(repositorio)
+public class ReservaConsultaTodosPorUsuario(IReservasRepositorio repositorio, IServicioChat chat, IServicioActualizacionEstadoReserva servicioActualizarEstado) : ReservaCasoDeUso(repositorio)
 {
     public List<Reserva> Ejecutar(int usuarioId)
     {
@@ -11,7 +11,7 @@ public class ReservaConsultaTodosPorUsuario(IReservasRepositorio repositorio,ISe
         foreach (var reserva in reservas)
         {
             reserva.MensajesNoLeidos = chat.ObtenerCantidadNoLeidosAsync(usuarioId, reserva.Id).Result;
-            servicioActualizarEstado.ActualizarEstadoReserva(reserva);      
+            servicioActualizarEstado.ActualizarEstadoReserva(reserva);
         }
         return reservas;
     }

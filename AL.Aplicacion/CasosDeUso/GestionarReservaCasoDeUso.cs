@@ -3,6 +3,7 @@ using AL.Aplicacion.Interfaces;
 using AL.Aplicacion.Excepciones;
 using AL.Aplicacion.Enumerativos;
 namespace AL.Aplicacion.CasosDeUso;
+
 public class GestionarReservasCasoDeUso
 {
     private readonly IReservasRepositorio _reservasRepositorio;

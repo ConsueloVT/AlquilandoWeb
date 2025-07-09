@@ -7,14 +7,15 @@ public class ServicioActualizacionEstadoReserva(IReservasRepositorio repositorio
 {
     public void ActualizarEstadoReserva(Reserva reserva)
     {
-        if (reserva.EstadoReserva== EstadoReserva.Confirmada && reserva.FechaInicioEstadia <= DateTime.Now)
+        if (reserva.EstadoReserva == EstadoReserva.Confirmada && reserva.FechaInicioEstadia <= DateTime.Now)
         {
             reserva.EstadoReserva = EstadoReserva.EnCurso;
         }
-        else if (reserva.EstadoReserva== EstadoReserva.EnCurso && reserva.FechaFinEstadia <= DateTime.Now)
+        else if (reserva.EstadoReserva == EstadoReserva.EnCurso && reserva.FechaFinEstadia <= DateTime.Now)
         {
             reserva.EstadoReserva = EstadoReserva.Finalizada;
         }
-        repositorio.Modificar(reserva);   
+        repositorio.Modificar(reserva);
     }
 }
+
