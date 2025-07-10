@@ -47,7 +47,7 @@ else if (servicioSesion.Rol == RolUsuario.Administrador || servicioSesion.Rol ==
             </div>
         }
 
-        <button class="btn btn-primary mt-3" @onclick="AplicarFiltro">Aplicar Filtro</button>
+        <button class="btn btn-primary mt-3" @onclick="@(() => AplicarFiltro(true))">Aplicar Filtro</button>
     </div>
 
     @if (!string.IsNullOrEmpty(mensaje))
@@ -58,13 +58,13 @@ else if (servicioSesion.Rol == RolUsuario.Administrador || servicioSesion.Rol ==
     <!-- Mostrar resultados -->
     @if (usuariosFiltrados != null)
     {
-        @if (usuariosFiltrados.Count == 0)
+        @if (usuariosFiltrados.Count == 0 && filtroAplicado)
         {
             <div class="alert alert-warning">
                 No se encontraron resultados que coincidan con los criterios de búsqueda.
             </div>
         }
-        else
+        else if (usuariosFiltrados.Count > 0)
         {
             <table class="table">
                 <thead>
@@ -112,6 +112,7 @@ else
     private string filtroSeleccionado = "";
     private string mensaje = "";
     private bool sesionInicializada = false;
+    private bool filtroAplicado = false;
     private string? errorSesion;
 
     private List<Usuario> usuariosFiltrados = new();
@@ -136,8 +137,12 @@ else
         }
     }
 
-    private void AplicarFiltro()
+    private void AplicarFiltro(bool limpiarMensaje = false)
     {
+        if (limpiarMensaje)
+            mensaje = string.Empty;
+
+        filtroAplicado = true;
         usuariosFiltrados.Clear();
 
         if (filtroSeleccionado == "ReservasUltimosMeses")
@@ -171,7 +176,7 @@ else
             mensaje = $"Error al habilitar: {ex.Message}";
         }
 
-        AplicarFiltro();
+        AplicarFiltro(); // sin limpiar mensaje
     }
 
     private void DeshabilitarUsuario(int usuarioId)
@@ -196,6 +201,6 @@ else
             mensaje = $"Error al deshabilitar: {ex.Message}";
         }
 
-        AplicarFiltro();
+        AplicarFiltro(); // sin limpiar mensaje
     }
 }
