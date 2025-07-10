@@ -46,6 +46,14 @@ else
     </table>
 }
 
+@if (_usuario.DescuentoProximaReserva > 0)
+{
+    <div class="alert alert-info" role="alert">
+        🎉 ¡Tenés un descuento del <strong>@_usuario.DescuentoProximaReserva%</strong> para tu próxima reserva!
+    </div>
+}
+
+
 <h3>Mis Reservas</h3>
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {

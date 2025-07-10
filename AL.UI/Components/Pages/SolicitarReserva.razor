@@ -189,7 +189,7 @@ else
             monto -= monto * servicioSesion.Usuario.DescuentoProximaReserva / 100;
         }
         reserva.MontoEstadia=monto;
-        return dias > 0 ? dias * alojamiento.PrecioPorNoche : 0;
+        return monto;
     }
     private void EditarCantidades()
     {

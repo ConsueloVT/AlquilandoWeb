@@ -35,8 +35,8 @@ else if (servicioSesion.Rol == RolUsuario.Administrador || servicioSesion.Rol ==
         @if (filtroSeleccionado == "ReservasUltimosMeses")
         {
             <div class="mt-2">
-                <label class="form-label">Meses:</label>
-                <InputNumber @bind-Value="cantidadMeses" class="form-control" />
+                <label class="form-label">Cantidad de meses:</label>
+                <InputNumber @bind-Value="cantidadMeses" class="form-control" min="0" DisplayName="Cantidad de meses pasados desde la ultima reserva realizada." />
             </div>
         }
         else if (filtroSeleccionado == "Nombre" || filtroSeleccionado == "Apellido")
@@ -66,6 +66,14 @@ else if (servicioSesion.Rol == RolUsuario.Administrador || servicioSesion.Rol ==
         }
         else if (usuariosFiltrados.Count > 0)
         {
+            <div class="mt-4 mb-3">
+                <h5>Porcentaje de descuento</h5>
+                <div class="d-flex">
+                    <InputNumber @bind-Value="descuentoPorcentaje" class="form-control w-25 me-2" min="0" max="100" />
+                    <button class="btn btn-success" @onclick="AplicarDescuento">Aplicar descuento a todos</button>
+                </div>
+            </div>
+
             <table class="table">
                 <thead>
                     <tr>
@@ -114,6 +122,7 @@ else
     private bool sesionInicializada = false;
     private bool filtroAplicado = false;
     private string? errorSesion;
+    private int descuentoPorcentaje = 0;
 
     private List<Usuario> usuariosFiltrados = new();
 
@@ -176,7 +185,7 @@ else
             mensaje = $"Error al habilitar: {ex.Message}";
         }
 
-        AplicarFiltro(); // sin limpiar mensaje
+        AplicarFiltro(); // mantiene el mensaje
     }
 
     private void DeshabilitarUsuario(int usuarioId)
@@ -201,6 +210,27 @@ else
             mensaje = $"Error al deshabilitar: {ex.Message}";
         }
 
-        AplicarFiltro(); // sin limpiar mensaje
+        AplicarFiltro(); // mantiene el mensaje
+    }
+
+    private void AplicarDescuento()
+    {
+        if (descuentoPorcentaje < 0 || descuentoPorcentaje > 100)
+        {
+            mensaje = "El descuento debe ser un valor entre 0 y 100.";
+            return;
+        }
+        try
+        {
+            foreach (var usuario in usuariosFiltrados)
+            {
+                repoUsuario.AsignarDescuento(usuario.Id, descuentoPorcentaje);
+            }
+            mensaje = $"Se aplicó un {descuentoPorcentaje}% de descuento a {usuariosFiltrados.Count} usuario/s.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al aplicar descuento: {ex.Message}";
+        }
     }
 }
