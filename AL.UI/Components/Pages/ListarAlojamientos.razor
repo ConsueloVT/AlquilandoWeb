@@ -104,8 +104,7 @@ else
         {
             if (ArchivarPublicacion != null)
             {
-                await ArchivarPublicacion.Ejecutar(id);
-                mensaje = $"Publicación {id} archivada.";
+                mensaje = await ArchivarPublicacion.Ejecutar(id);
             }
             else
             {
@@ -128,7 +127,7 @@ else
             if (DesarchivarPublicacion != null)
             {
                 await DesarchivarPublicacion.Ejecutar(id);
-                mensaje = $"Publicación {id} desarchivada.";
+                mensaje = $"Publicación desarchivada exitosamente.";
             }
             else
             {

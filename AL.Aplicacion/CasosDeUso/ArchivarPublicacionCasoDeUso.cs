@@ -42,7 +42,7 @@ public class ArchivarPublicacionCasoDeUso
         }
         else
         {
-            return "Publicación archivada.";
+            return "Publicación archivada exitosamente.";
         }
     }
 }
