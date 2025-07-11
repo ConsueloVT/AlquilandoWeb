@@ -1,7 +1,9 @@
 using AL.Aplicacion.Entidades;
 using AL.Aplicacion.Excepciones;
 using AL.Aplicacion.Interfaces;
+using AL.Aplicacion.Enumerativos;
 namespace AL.Aplicacion.CasosDeUso;
+
 
 public class DeshabilitarUsuarioCasoDeUso
 {
@@ -27,7 +29,8 @@ public class DeshabilitarUsuarioCasoDeUso
         var reservas = _reservaRepositorio.ObtenerReservasPorUsuarioId(usuarioId);
 
         bool tieneEnCurso = reservas.Any(r =>
-            r.FechaInicioEstadia.Date <= hoy && hoy <= r.FechaFinEstadia.Date);
+            r.FechaInicioEstadia.Date <= hoy && hoy <= r.FechaFinEstadia.Date
+            && r.EstadoReserva != EstadoReserva.Finalizada);
 
         if (tieneEnCurso)
             throw new UsuarioConReservaEnCursoException();
